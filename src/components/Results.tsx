@@ -1,7 +1,14 @@
-import React from 'react';
-import { ExternalLink, ArrowLeft, BarChart3, CheckCircle, X, Minus } from 'lucide-react';
-import { UserAnswer, PartyMatch } from '../types';
-import { questionsData, partyColors } from '../data/questions';
+import React from "react";
+import {
+  ExternalLink,
+  ArrowLeft,
+  BarChart3,
+  CheckCircle,
+  X,
+  Minus,
+} from "lucide-react";
+import { UserAnswer, PartyMatch } from "../types";
+import { questionsData, partyColors } from "../data/questions_old";
 
 interface ResultsProps {
   userAnswers: UserAnswer[];
@@ -10,17 +17,19 @@ interface ResultsProps {
 
 const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
   const calculateMatches = (): PartyMatch[] => {
-    const parties = ['PSOE', 'PP', 'VOX', 'UP', 'ERC', 'PNV', 'Cs'];
+    const parties = ["PSOE", "PP", "VOX", "UP", "ERC", "PNV", "Cs"];
     const matches: PartyMatch[] = [];
 
-    parties.forEach(party => {
+    parties.forEach((party) => {
       let agreements = 0;
       let total = 0;
 
-      userAnswers.forEach(answer => {
-        const question = questionsData.find(q => q.id === answer.questionId);
+      userAnswers.forEach((answer) => {
+        const question = questionsData.find((q) => q.id === answer.questionId);
         if (question) {
-          const partyVote = question.partyVotes.find(pv => pv.party === party);
+          const partyVote = question.partyVotes.find(
+            (pv) => pv.party === party
+          );
           if (partyVote) {
             total++;
             if (partyVote.position === answer.optionId) {
@@ -36,7 +45,7 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
         percentage,
         agreements,
         total,
-        color: partyColors[party]
+        color: partyColors[party],
       });
     });
 
@@ -47,20 +56,20 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
 
   const getPositionIcon = (position: string) => {
     switch (position) {
-      case 'favor':
-      case 'aumentar':
-      case 'mantener':
-      case 'masiva':
-      case 'mixta':
+      case "favor":
+      case "aumentar":
+      case "mantener":
+      case "masiva":
+      case "mixta":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'contra':
-      case 'eliminar':
-      case 'privada':
+      case "contra":
+      case "eliminar":
+      case "privada":
         return <X className="h-4 w-4 text-red-500" />;
-      case 'parcial':
-      case 'gradual':
-      case 'reformar':
-      case 'equilibrar':
+      case "parcial":
+      case "gradual":
+      case "reformar":
+      case "equilibrar":
         return <Minus className="h-4 w-4 text-yellow-500" />;
       default:
         return <Minus className="h-4 w-4 text-gray-400" />;
@@ -69,18 +78,18 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
 
   const getPositionText = (position: string) => {
     const positionMap: Record<string, string> = {
-      'favor': 'A favor',
-      'contra': 'En contra',
-      'parcial': 'Apoyo parcial',
-      'aumentar': 'Aumentar',
-      'mantener': 'Mantener',
-      'gradual': 'Gradual',
-      'eliminar': 'Eliminar',
-      'reformar': 'Reformar',
-      'masiva': 'Inversión masiva',
-      'privada': 'Sector privado',
-      'mixta': 'Mixta',
-      'equilibrar': 'Equilibrar'
+      favor: "A favor",
+      contra: "En contra",
+      parcial: "Apoyo parcial",
+      aumentar: "Aumentar",
+      mantener: "Mantener",
+      gradual: "Gradual",
+      eliminar: "Eliminar",
+      reformar: "Reformar",
+      masiva: "Inversión masiva",
+      privada: "Sector privado",
+      mixta: "Mixta",
+      equilibrar: "Equilibrar",
     };
     return positionMap[position] || position;
   };
@@ -95,19 +104,28 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
             Tus Resultados
           </h1>
           <p className="text-xl text-gray-600">
-            Aquí tienes tu afinidad con cada partido político basada en votaciones reales del Congreso
+            Aquí tienes tu afinidad con cada partido político basada en
+            votaciones reales del Congreso
           </p>
         </div>
 
         {/* Party Matches */}
         <div className="grid gap-6 mb-12">
           {matches.map((match, index) => (
-            <div key={match.party} className="bg-white rounded-xl shadow-lg p-6">
+            <div
+              key={match.party}
+              className="bg-white rounded-xl shadow-lg p-6"
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                  <div className="text-2xl font-bold text-gray-400">#{index + 1}</div>
+                  <div className="text-2xl font-bold text-gray-400">
+                    #{index + 1}
+                  </div>
                   <div>
-                    <h3 className="text-2xl font-bold" style={{ color: match.color }}>
+                    <h3
+                      className="text-2xl font-bold"
+                      style={{ color: match.color }}
+                    >
                       {match.party}
                     </h3>
                     <p className="text-gray-600">
@@ -116,19 +134,22 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold" style={{ color: match.color }}>
+                  <div
+                    className="text-3xl font-bold"
+                    style={{ color: match.color }}
+                  >
                     {Math.round(match.percentage)}%
                   </div>
                   <p className="text-sm text-gray-500">afinidad</p>
                 </div>
               </div>
-              
+
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
                   className="h-3 rounded-full transition-all duration-1000 ease-out"
-                  style={{ 
+                  style={{
                     width: `${match.percentage}%`,
-                    backgroundColor: match.color
+                    backgroundColor: match.color,
                   }}
                 ></div>
               </div>
@@ -141,14 +162,19 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Desglose Detallado de Votaciones
           </h2>
-          
+
           <div className="space-y-8">
-            {questionsData.map(question => {
-              const userAnswer = userAnswers.find(a => a.questionId === question.id);
+            {questionsData.map((question) => {
+              const userAnswer = userAnswers.find(
+                (a) => a.questionId === question.id
+              );
               if (!userAnswer) return null;
 
               return (
-                <div key={question.id} className="border-b border-gray-200 pb-8 last:border-b-0">
+                <div
+                  key={question.id}
+                  className="border-b border-gray-200 pb-8 last:border-b-0"
+                >
                   <div className="mb-4">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">
                       {question.title}
@@ -157,16 +183,23 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
                     <div className="flex items-center space-x-2 text-sm text-blue-600">
                       <span className="font-medium">Tu respuesta:</span>
                       <span className="px-2 py-1 bg-blue-100 rounded">
-                        {question.options.find(o => o.id === userAnswer.optionId)?.text}
+                        {
+                          question.options.find(
+                            (o) => o.id === userAnswer.optionId
+                          )?.text
+                        }
                       </span>
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                    {question.partyVotes.map(partyVote => (
-                      <div key={partyVote.party} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    {question.partyVotes.map((partyVote) => (
+                      <div
+                        key={partyVote.party}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="flex items-center space-x-2">
-                          <span 
+                          <span
                             className="font-semibold"
                             style={{ color: partyColors[partyVote.party] }}
                           >
@@ -183,7 +216,7 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
 
                   <div className="flex items-center space-x-2 text-sm text-gray-500">
                     <ExternalLink className="h-4 w-4" />
-                    <a 
+                    <a
                       href={question.source.url}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -213,9 +246,10 @@ const Results: React.FC<ResultsProps> = ({ userAnswers, onRestart }) => {
         <div className="mt-12 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
           <h3 className="font-semibold text-yellow-800 mb-2">Importante</h3>
           <p className="text-yellow-700 text-sm">
-            Este test es orientativo y se basa en una muestra limitada de votaciones. 
-            Para una decisión electoral informada, te recomendamos consultar los programas 
-            completos de los partidos y diversas fuentes de información política.
+            Este test es orientativo y se basa en una muestra limitada de
+            votaciones. Para una decisión electoral informada, te recomendamos
+            consultar los programas completos de los partidos y diversas fuentes
+            de información política.
           </p>
         </div>
       </div>

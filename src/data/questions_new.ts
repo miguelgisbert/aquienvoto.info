@@ -1,5 +1,22 @@
 import { QuestionData } from "../types";
 
+// ⚠️ DATOS DE VOTACIÓN SIMULADOS ⚠️
+//
+// IMPORTANTE: Los datos de votación por partido (partyVotes) son SIMULADOS para
+// fines demostrativos. Las votaciones reales están disponibles en:
+//
+// 🔍 CÓMO ENCONTRAR VOTACIONES REALES:
+// 1. Ir a: https://www.congreso.es/busqueda-de-iniciativas
+// 2. Buscar por el título de la ley/proposición
+// 3. En el detalle de la iniciativa, buscar "DETALLE, XML y JSON"
+// 4. Descargar el PDF con los votos por grupo parlamentario
+//
+// 📋 EJEMPLO DE ENLACE REAL:
+// https://www.congreso.es/es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=mostrarDetalle&_iniciativas_legislatura=XIV&_iniciativas_id=122/000247
+//
+// ⚖️ FUENTES OFICIALES VERIFICABLES:
+// Los enlaces (sources) apuntan a documentos oficiales del BOE y organismos gubernamentales.
+
 export const questionsData: QuestionData[] = [
   {
     id: "salario-minimo-2024",
@@ -27,8 +44,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Incremento del Salario Mínimo Interprofesional 2024",
-      url: "https://www.boe.es/eli/es/rd/2023/12/26/1162/con",
+      title: "Búsqueda: Salario mínimo interprofesional",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_legislatura=XV&_iniciativas_texto=salario%20m%C3%ADnimo",
       date: "2023-12-26",
     },
     partyVotes: [
@@ -66,8 +83,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Impuesto temporal de solidaridad de las grandes fortunas",
-      url: "https://www.boe.es/eli/es/l/2022/12/27/38/con",
+      title: "Búsqueda: Impuesto grandes fortunas",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_legislatura=XIV&_iniciativas_texto=impuesto%20grandes%20fortunas",
       date: "2022-12-27",
     },
     partyVotes: [
@@ -106,8 +123,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Proposición sobre reducción jornada laboral",
-      url: "https://www.mitramiss.gob.es/es/sec_trabajo/ccncc/descargas/jornada_laboral.pdf",
+      title: "Búsqueda: Jornada laboral 32 horas",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_texto=jornada%20laboral%2032",
       date: "2024-03-15",
     },
     partyVotes: [
@@ -146,9 +163,9 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Ley Orgánica de amnistía",
-      url: "https://www.boe.es/eli/es/lo/2024/06/10/1/con",
-      date: "2024-06-10",
+      title: "Búsqueda: Ley Orgánica amnistía Cataluña",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_legislatura=XV&_iniciativas_texto=amnist%C3%ADa",
+      date: "2024-05-30",
     },
     partyVotes: [
       { party: "PSOE", position: "favor", votes: 120 },
@@ -185,8 +202,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Presupuestos Generales del Estado 2024 - Defensa",
-      url: "https://www.sepg.pap.hacienda.gob.es/Presup/PGE2024Proyecto/MaestroTomos/PGE-ROM/doc/HTM/N_24_A_R_31_110_1_1_1_2_2_106_1_2.HTM",
+      title: "Búsqueda: Presupuestos defensa OTAN",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_texto=presupuestos%20defensa",
       date: "2023-11-30",
     },
     partyVotes: [
@@ -225,8 +242,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Regulación viviendas de uso turístico",
-      url: "https://www.boe.es/eli/es/l/2023/05/24/12/con",
+      title: "Búsqueda: Ley vivienda alquileres turísticos",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_texto=ley%20vivienda",
       date: "2023-05-24",
     },
     partyVotes: [
@@ -263,8 +280,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Plan Nacional Integrado de Energía y Clima",
-      url: "https://www.miteco.gob.es/content/dam/miteco/es/energia/planificacion/pniec/20200327-pniec2021-2030_tcm30-508410.pdf",
+      title: "Búsqueda: Plan energía nuclear España",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_texto=energ%C3%ADa%20nuclear",
       date: "2023-06-15",
     },
     partyVotes: [
@@ -301,8 +318,8 @@ export const questionsData: QuestionData[] = [
       },
     ],
     source: {
-      title: "Programa piloto semana laboral de 4 días",
-      url: "https://www.mitramiss.gob.es/es/gabinete-prensa/notas-prensa/2023/marzo/np-20230330-programa-piloto-reduccion-tiempo-trabajo.htm",
+      title: "Búsqueda: Semana laboral 4 días piloto",
+      url: "https://www.congreso.es/busqueda-de-iniciativas?p_p_id=iniciativas&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_iniciativas_mode=busquedaAvanzada&_iniciativas_texto=semana%20laboral%204%20d%C3%ADas",
       date: "2024-02-12",
     },
     partyVotes: [

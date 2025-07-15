@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Test from "./components/Test";
 import Results from "./components/Results";
+import AdminStats from "./components/AdminStats";
 import { UserAnswer, AppState } from "./types";
 
 function App() {
@@ -70,6 +71,9 @@ function App() {
             onRestart={handleRestart}
           />
         )}
+
+      {/* Component d'estadístiques (només visible amb ?admin=true) */}
+      <AdminStats />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
-import { questionsData } from "../data/questions_old";
+import { questionsData } from "../data/questions_new";
 import { UserAnswer } from "../types";
+import { useAnalytics, useResponseStorage } from "../hooks/useAnalytics";
 
 interface TestProps {
   onComplete: (answers: UserAnswer[]) => void;
@@ -13,11 +14,23 @@ const Test: React.FC<TestProps> = ({ onComplete, onBack }) => {
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   const [selectedOption, setSelectedOption] = useState<string>("");
 
+  // Hooks per analytics i emmagatzematge
+  const { track } = useAnalytics();
+  const { saveResponse } = useResponseStorage();
+
   const question = questionsData[currentQuestion];
   const progress = ((currentQuestion + 1) / questionsData.length) * 100;
 
   const handleAnswer = (optionId: string) => {
     setSelectedOption(optionId);
+
+    // Tracking de selecció de resposta
+    track("question_answered", {
+      question_id: question.id,
+      question_number: currentQuestion + 1,
+      option_selected: optionId,
+      label: `Q${currentQuestion + 1}: ${optionId}`,
+    });
   };
 
   const handleNext = () => {
@@ -37,7 +50,32 @@ const Test: React.FC<TestProps> = ({ onComplete, onBack }) => {
     if (currentQuestion < questionsData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedOption("");
+
+      // Tracking de navegació
+      track("question_navigation", {
+        from_question: currentQuestion + 1,
+        to_question: currentQuestion + 2,
+        label: `Navigate Q${currentQuestion + 1} to Q${currentQuestion + 2}`,
+      });
     } else {
+      // Test completat - guardar respostes i tracking
+      track("test_completed", {
+        total_questions: questionsData.length,
+        completion_time: Date.now(),
+        label: "Test finished",
+      });
+
+      // Guardar respostes
+      saveResponse(updatedAnswers, {
+        test_completed_at: new Date().toISOString(),
+        total_questions: questionsData.length,
+        browser_info: {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          screen: `${screen.width}x${screen.height}`,
+        },
+      });
+
       onComplete(updatedAnswers);
     }
   };

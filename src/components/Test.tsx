@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
-import { questionsData } from "../data/questions_new";
+import { questionsData } from "../data/questions_old";
 import { UserAnswer } from "../types";
 import { useAnalytics, useResponseStorage } from "../hooks/useAnalytics";
 

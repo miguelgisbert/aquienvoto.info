@@ -1,3 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant short (@media (max-width: 639px));
+@custom-variant narrow (@media (max-width: 400px));
+
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary,
+  select,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="range"],
+  label:has(> input[type="checkbox"]),
+  label:has(> input[type="radio"]) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}

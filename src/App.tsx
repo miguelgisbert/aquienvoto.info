@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Test from "./components/Test";
 import Results from "./components/Results";
 import AdminStats from "./components/AdminStats";
+import Footer from "./components/Footer";
 import { UserAnswer, AppState } from "./types";
+import { questions } from "./data/questions";
+import {
+  useAnalytics,
+  useResponseStorage,
+  updateStoredIntents,
+} from "./hooks/useAnalytics";
+import { updateResponseIntents } from "./lib/supabase";
+import { useI18n } from "./i18n";
+
+interface SavedResponse {
+  id: string | null;
+  at: string;
+}
 
 function App() {
   const [appState, setAppState] = useState<AppState>({
@@ -13,6 +27,13 @@ function App() {
     userAnswers: [],
     showResults: false,
   });
+  const [testDurationMs, setTestDurationMs] = useState<number | null>(null);
+  const [intentionOpen, setIntentionOpen] = useState(false);
+  const savePromise = useRef<Promise<SavedResponse | null> | null>(null);
+
+  const { track } = useAnalytics();
+  const { saveResponse } = useResponseStorage();
+  const { lang } = useI18n();
 
   const handleNavigate = (view: "home" | "test" | "results") => {
     if (view === "results" && appState.userAnswers.length === 0) {
@@ -29,15 +50,69 @@ function App() {
       userAnswers: [],
       showResults: false,
     }));
+    setIntentionOpen(false);
+    savePromise.current = null;
   };
 
-  const handleTestComplete = (answers: UserAnswer[]) => {
+  // Guardat en dues fases: la fila es desa en acabar el test (sense
+  // intencions) i les intencions s'afegeixen quan l'usuari contesta el
+  // bloc que es mostra a baix dels resultats.
+  const handleTestComplete = (answers: UserAnswer[], durationMs: number) => {
+    const completedAt = new Date().toISOString();
+    setTestDurationMs(durationMs);
+    setIntentionOpen(true);
+    track("intention_step_shown", { label: "Optional intention step" });
     setAppState((prev) => ({
       ...prev,
       currentView: "results",
       userAnswers: answers,
       showResults: true,
     }));
+
+    savePromise.current = saveResponse(answers, {
+      lang,
+      test_completed_at: completedAt,
+      duration_ms: durationMs,
+      total_questions: questions.length,
+      intent_before: null,
+      intent_after: null,
+    }).then((result) =>
+      result.success ? { id: result.id, at: completedAt } : null
+    );
+  };
+
+  // Un cop es mostren els resultats: el bloc d'intenció → actualitza la fila
+  const handleIntentionDone = (
+    before: string | null,
+    after: string | null
+  ) => {
+    if (before || after) {
+      track("intention_submitted", {
+        before,
+        after,
+        label: `abans=${before} ara=${after}`,
+      });
+    } else {
+      track("intention_skipped", { label: "Intention step skipped" });
+    }
+
+    void (savePromise.current ?? Promise.resolve(null)).then((saved) => {
+      if (!saved) {
+        // La inserció inicial va fallar: es desa sencer amb les intencions
+        void saveResponse(appState.userAnswers, {
+          lang,
+          test_completed_at: new Date().toISOString(),
+          duration_ms: testDurationMs ?? 0,
+          total_questions: questions.length,
+          intent_before: before,
+          intent_after: after,
+        });
+        return;
+      }
+      if (!before && !after) return; // res a actualitzar
+      updateStoredIntents(saved.at, before, after);
+      if (saved.id) void updateResponseIntents(saved.id, before, after);
+    });
   };
 
   const handleRestart = () => {
@@ -47,6 +122,9 @@ function App() {
       userAnswers: [],
       showResults: false,
     });
+    setIntentionOpen(false);
+    setTestDurationMs(null);
+    savePromise.current = null;
   };
 
   return (
@@ -69,11 +147,15 @@ function App() {
           <Results
             userAnswers={appState.userAnswers}
             onRestart={handleRestart}
+            intentionOpen={intentionOpen}
+            onIntentionDone={handleIntentionDone}
           />
         )}
 
       {/* Component d'estadístiques (només visible amb ?admin=true) */}
       <AdminStats />
+
+      <Footer />
     </div>
   );
 }

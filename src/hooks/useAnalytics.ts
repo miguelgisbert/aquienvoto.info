@@ -1,14 +1,40 @@
 // Hook per gestionar analytics i emmagatzematge de dades
 
+import { insertResponse, supabaseEnabled } from "../lib/supabase";
+
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
-    plausible: (...args: any[]) => void;
+    gtag: (...args: unknown[]) => void;
+    plausible: (
+      event: string,
+      options?: { props?: Record<string, unknown> }
+    ) => void;
   }
 }
 
+export interface StoredAnswer {
+  questionId: string;
+  optionId: string;
+}
+
+export interface StoredResponse {
+  responses: StoredAnswer[];
+  timestamp: string;
+  userAgent: string;
+  [key: string]: unknown;
+}
+
+type TrackData = Record<string, unknown> & { label?: string; value?: number };
+
+export interface SaveResult {
+  success: boolean;
+  remote: boolean;
+  id: string | null;
+  data?: StoredResponse;
+  error?: unknown;
+}
+
 export const useAnalytics = () => {
-  // Funció per enviar events a Google Analytics
   const trackEvent = (
     action: string,
     category: string,
@@ -24,15 +50,13 @@ export const useAnalytics = () => {
     }
   };
 
-  // Funció per enviar events a Plausible
-  const trackPlausible = (eventName: string, props?: Record<string, any>) => {
+  const trackPlausible = (eventName: string, props?: Record<string, unknown>) => {
     if (typeof window !== "undefined" && window.plausible) {
       window.plausible(eventName, { props });
     }
   };
 
-  // Funció combinada per enviar a ambdós
-  const track = (eventName: string, data?: Record<string, any>) => {
+  const track = (eventName: string, data?: TrackData) => {
     trackEvent(eventName, "user_interaction", data?.label, data?.value);
     trackPlausible(eventName, data);
   };
@@ -44,44 +68,87 @@ export const useAnalytics = () => {
   };
 };
 
-// Hook per emmagatzemar respostes dels usuaris
+// Llig les respostes guardades en localStorage (còpia local de seguretat)
+export const getStoredResponses = (): StoredResponse[] => {
+  try {
+    return JSON.parse(
+      localStorage.getItem("aquienvoto_responses") || "[]"
+    ) as StoredResponse[];
+  } catch {
+    return [];
+  }
+};
+
+// Actualitza les intencions de la còpia local de la resposta guardada
+// (es busca pel camp test_completed_at, que es fixa en acabar el test)
+export const updateStoredIntents = (
+  testCompletedAt: string,
+  before: string | null,
+  after: string | null
+): void => {
+  try {
+    const rows = getStoredResponses();
+    let touched = false;
+    for (const row of rows) {
+      if (row.test_completed_at === testCompletedAt) {
+        row.intent_before = before;
+        row.intent_after = after;
+        touched = true;
+      }
+    }
+    if (touched) {
+      localStorage.setItem("aquienvoto_responses", JSON.stringify(rows));
+    }
+  } catch {
+    /* localStorage no disponible */
+  }
+};
+
+// Hook per emmagatzemar respostes: Supabase + còpia local
 export const useResponseStorage = () => {
-  const saveResponse = async (responses: any[], userMetadata?: any) => {
+  const saveResponse = async (
+    responses: StoredAnswer[],
+    userMetadata?: Record<string, unknown>
+  ): Promise<SaveResult> => {
     try {
-      // Opció 1: LocalStorage (només client)
-      const responseData = {
+      const responseData: StoredResponse = {
         responses,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         ...userMetadata,
       };
 
-      // Guardar localment
-      const existingData = JSON.parse(
-        localStorage.getItem("aquienvoto_responses") || "[]"
-      );
+      // Còpia local (panell admin offline / fallback)
+      const existingData = getStoredResponses();
       existingData.push(responseData);
       localStorage.setItem(
         "aquienvoto_responses",
         JSON.stringify(existingData)
       );
 
-      // Opció 2: Enviar a un servei extern (Supabase, Firebase, etc.)
-      // await sendToExternalService(responseData);
+      // Enviament a Supabase (si està configurat)
+      let remote = false;
+      let id: string | null = null;
+      if (supabaseEnabled) {
+        id = await insertResponse({
+          lang: String(userMetadata?.lang ?? "es"),
+          answers: responses,
+          user_agent: navigator.userAgent,
+          completed_at:
+            (userMetadata?.test_completed_at as string | undefined) ?? null,
+          duration_ms: (userMetadata?.duration_ms as number | undefined) ?? null,
+          intent_before:
+            (userMetadata?.intent_before as string | null | undefined) ?? null,
+          intent_after:
+            (userMetadata?.intent_after as string | null | undefined) ?? null,
+        });
+        remote = id !== null;
+      }
 
-      console.log("Respostes guardades:", responseData);
-      return { success: true, data: responseData };
+      return { success: true, remote, id, data: responseData };
     } catch (error) {
       console.error("Error guardant respostes:", error);
-      return { success: false, error };
-    }
-  };
-
-  const getStoredResponses = () => {
-    try {
-      return JSON.parse(localStorage.getItem("aquienvoto_responses") || "[]");
-    } catch {
-      return [];
+      return { success: false, remote: false, id: null, error };
     }
   };
 
@@ -89,21 +156,4 @@ export const useResponseStorage = () => {
     saveResponse,
     getStoredResponses,
   };
-};
-
-// Funció per enviar dades a Supabase (configurar després)
-export const setupSupabaseLogging = () => {
-  // Configuració de Supabase per emmagatzemar respostes
-  // const supabase = createClient(url, key);
-
-  const logToSupabase = async (data: any) => {
-    // const { error } = await supabase
-    //   .from('user_responses')
-    //   .insert([data]);
-    // return !error;
-    console.log("Enviaria a Supabase:", data);
-    return true;
-  };
-
-  return { logToSupabase };
 };

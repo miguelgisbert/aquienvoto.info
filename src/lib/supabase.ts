@@ -53,7 +53,14 @@ export async function insertResponse(row: ResponseRow): Promise<string | null> {
       headers: { ...headers(), Prefer: "return=representation" },
       body: JSON.stringify(row),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(
+        `[supabase] inserció rebutjada (${res.status}):`,
+        detail.slice(0, 300)
+      );
+      return null;
+    }
     const rows = (await res.json()) as ResponseRow[];
     return rows?.[0]?.id ?? null;
   } catch (error) {
@@ -80,6 +87,13 @@ export async function updateResponseIntents(
         body: JSON.stringify({ intent_before: before, intent_after: after }),
       }
     );
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(
+        `[supabase] actualització d'intencions rebutjada (${res.status}):`,
+        detail.slice(0, 300)
+      );
+    }
     return res.ok;
   } catch (error) {
     console.error("Error actualitzant intencions a Supabase:", error);

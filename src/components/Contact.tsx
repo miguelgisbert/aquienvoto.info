@@ -4,9 +4,10 @@ import emailjs from "@emailjs/browser";
 import { useI18n } from "../i18n";
 import { useAnalytics } from "../hooks/useAnalytics";
 
-// Claus públiques d'EmailJS (dissenyades per anar al client; igual que a miguelgisbert.dev)
+// Claus públiques d'EmailJS (dissenyades per anar al client).
+// Plantilla dedicada d'aquienvoto.info (la de miguelgisbert.dev és template_beig3l2).
 const EMAILJS_SERVICE_ID = "service_7514287";
-const EMAILJS_TEMPLATE_ID = "template_beig3l2";
+const EMAILJS_TEMPLATE_ID = "template_y6b6cts";
 const EMAILJS_PUBLIC_KEY = "hFqS9l2zhgBOtS0HT";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -49,6 +50,7 @@ const Contact: React.FC<ContactProps> = ({ onClose }) => {
           from_email: (form.elements.namedItem("from_email") as HTMLInputElement).value,
           message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
           page: window.location.href,
+          site: "aquienvoto.info",
           lang,
         },
         { publicKey: EMAILJS_PUBLIC_KEY }

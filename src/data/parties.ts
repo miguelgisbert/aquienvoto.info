@@ -52,9 +52,9 @@ export const parties: Party[] = [
     color: "#E0457B",
     note: {
       es: "Coalición de 2026 (IU, Movimiento Sumar, Más Madrid, Comuns y otras formaciones); no incluye a Podemos y no concurre en Canarias, Baleares ni Comunidad Valenciana.",
-      ca: "Coalició de 2026 (IU, Moviment Sumar, Más Madrid, Comuns i altres formacions); no inclou Podemos i no concúria a Canàries, Balears ni Comunitat Valenciana.",
+      ca: "Coalició de 2026 (IU, Moviment Sumar, Más Madrid, Comuns i altres formacions); no inclou Podemos i no concorre a Canàries, Balears ni Comunitat Valenciana.",
       gl: "Coalición de 2026 (IU, Movimento Sumar, Más Madrid, Comuns e outras formacións); non inclúe a Podemos e non concurre en Canarias, Baleares nin Comunidade Valenciana.",
-      eu: "2026ko koalizioa (IU, Movimiento Sumar, Más Madrid, Comuns eta beste formazio batzuk); Podemos ez du eta ez da Kanariaetan, Balearretan ezta Valentziako Erkidegoan ere aurkezten.",
+      eu: "2026ko koalizioa (IU, Movimiento Sumar, Más Madrid, Comuns eta beste formazio batzuk); ez du Podemos barne, eta ez da Kanarietan, Balearretan ezta Valentziako Erkidegoan ere aurkezten.",
     },
   },
   {
@@ -163,7 +163,7 @@ export const parties: Party[] = [
       es: "No es una coalición electoral: agrupa las votaciones de EH Bildu y BNG (Geroa Bai no obtuvo escaño en la XV legislatura).",
       ca: "No és una coalició electoral: agrupa els vots d'EH Bildu i BNG (Geroa Bai no va obtenir escó a la XV legislatura).",
       gl: "Non é unha coalición electoral: agrupa os votos de EH Bildu e BNG (Geroa Bai non obtivo escano na XV lexislatura).",
-      eu: "Hauteskoalizazio bat ez da: EH Bildu eta BNG bozketak biltzen ditu (Geroa Bai-k ez zuen eserlekurik XV legegintzaldian).",
+      eu: "Hauteskoalizio bat ez da: EH Bildu eta BNGren bozketak biltzen ditu (Geroa Bai-k ez zuen eserlekurik XV legegintzaldian).",
     },
   },
   {

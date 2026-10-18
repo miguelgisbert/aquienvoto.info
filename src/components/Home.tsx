@@ -67,43 +67,6 @@ const Home: React.FC<HomeProps> = ({ onStartTest }) => {
           </div>
         </div>
 
-        {/* How it works */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            {t("home.how")}
-          </h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
-                1
-              </div>
-              <h4 className="font-semibold mb-2">{t("home.s1t")}</h4>
-              <p className="text-gray-600 text-sm">{t("home.s1d")}</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
-                2
-              </div>
-              <h4 className="font-semibold mb-2">{t("home.s2t")}</h4>
-              <p className="text-gray-600 text-sm">{t("home.s2d")}</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
-                3
-              </div>
-              <h4 className="font-semibold mb-2">{t("home.s3t")}</h4>
-              <p className="text-gray-600 text-sm">{t("home.s3d")}</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-4">
-                4
-              </div>
-              <h4 className="font-semibold mb-2">{t("home.s4t")}</h4>
-              <p className="text-gray-600 text-sm">{t("home.s4d")}</p>
-            </div>
-          </div>
-        </div>
-
         {/* Data Sources */}
         <div className="bg-gray-50 rounded-xl p-8">
           <h2 className="text-2xl font-bold text-center mb-6">

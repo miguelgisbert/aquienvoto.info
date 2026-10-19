@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Language, LocalizedString } from "../types";
 
@@ -63,6 +63,13 @@ const es = {
   "results.justification": "Justificación de las posiciones",
   "results.noPosition": "Sin posición registrada",
   "results.restart": "Hacer el test de nuevo",
+  "results.shareTitle": "Comparte tus resultados",
+  "results.shareLead": "Comparte tu afinidad y compara con la gente que conozcas",
+  "results.shareText": "He hecho el test de aquienenvoto.info: 12 votaciones reales del Congreso, sin IA. Mi partido más afín: {party} ({pct}%). ¿Y tú? {url}",
+  "results.shareCopy": "Copiar enlace",
+  "results.shareCopied": "¡Copiado!",
+  "results.shareDownload": "Descargar imagen",
+  "results.shareImageAlt": "Tarjeta de resultados de aquienenvoto.info",
   "results.warnTitle": "Importante",
   "results.warn":
     "Test orientativo basado en votaciones de la XV legislatura (datos hasta el 30/09/2026, más la votación del 02/10/2026). Los programas electorales del 29-N aún no se han publicado: consulta las fuentes oficiales y los programas completos antes de decidir.",
@@ -114,6 +121,7 @@ const es = {
   "admin.completion": "Completado",
 
   "footer.contact": "Contacto",
+  "footer.embed": "Incrusta el test",
   "contact.title": "¿Has encontrado un error o tienes una mejora?",
   "contact.lead": "Escríbeme y lo reviso: correcciones de datos, partidos, preguntas o sugerencias.",
   "contact.name": "Tu nombre",
@@ -189,6 +197,13 @@ const ca: Dict = {
   "results.justification": "Justificació de les posicions",
   "results.noPosition": "Sense posició registrada",
   "results.restart": "Tornar a fer el test",
+  "results.shareTitle": "Comparteix els teus resultats",
+  "results.shareLead": "Comparteix la teva afinitat i compara amb la gent que conegues",
+  "results.shareText": "He fet el test de aquienenvoto.info: 12 votacions reals del Congrés, sense IA. El meu partit més afí: {party} ({pct}%). I tu? {url}",
+  "results.shareCopy": "Copiar enllaç",
+  "results.shareCopied": "Copiat!",
+  "results.shareDownload": "Descarregar imatge",
+  "results.shareImageAlt": "Imatge de resultats d'aquienenvoto.info",
   "results.warnTitle": "Important",
   "results.warn":
     "Test orientatiu basat en votacions de la XV legislatura (dades fins al 30/09/2026, més la votació del 02/10/2026). Els programes electorals del 29-N encara no s'han publicat: consulta les fonts oficials i els programes complets abans de decidir.",
@@ -240,6 +255,7 @@ const ca: Dict = {
   "admin.completion": "Completat",
 
   "footer.contact": "Contacte",
+  "footer.embed": "Incrusta el test",
   "contact.title": "¿Has trobat un error o tens una millora?",
   "contact.lead": "Escriu-me i ho reviso: correccions de dades, partits, preguntes o suggeriments.",
   "contact.name": "El teu nom",
@@ -313,6 +329,13 @@ const gl: Dict = {
   "results.justification": "Justificación das posicións",
   "results.noPosition": "Sen posición rexistrada",
   "results.restart": "Facer o test de novo",
+  "results.shareTitle": "Comparte os teus resultados",
+  "results.shareLead": "Comparte a túa afinidade e compara coa xente que coñezas",
+  "results.shareText": "Fixen o test de aquienenvoto.info: 12 votacións reais do Congreso, sen IA. O meu partido máis afín: {party} ({pct}%). E ti? {url}",
+  "results.shareCopy": "Copiar ligazón",
+  "results.shareCopied": "Copiado!",
+  "results.shareDownload": "Descargar imaxe",
+  "results.shareImageAlt": "Imaxe de resultados de aquienenvoto.info",
   "results.warnTitle": "Importante",
   "results.warn":
     "Test orientativo baseado en votacións da XV lexislatura (datos ata o 30/09/2026, máis a votación do 02/10/2026). Os programas electorais do 29-N aínda non se publicaron: consulta as fontes oficiais e os programas completos antes de decidir.",
@@ -364,6 +387,7 @@ const gl: Dict = {
   "admin.completion": "Completado",
 
   "footer.contact": "Contacto",
+  "footer.embed": "Incrusta o test",
   "contact.title": "Cochaches un erro ou tes unha mellora?",
   "contact.lead": "Escríbeme e reviso: correccións de datos, partidos, preguntas ou suxestións.",
   "contact.name": "O teu nome",
@@ -438,6 +462,13 @@ const eu: Dict = {
   "results.justification": "Posizioen justifikazioa",
   "results.noPosition": "Ez dago posiziorik erregistratuta",
   "results.restart": "Berriro egin testa",
+  "results.shareTitle": "Partekatu zure emaitzak",
+  "results.shareLead": "Partekatu zure afinitatea eta konparatu ezagutzen duzun jendearekin",
+  "results.shareText": "aquienenvoto.info-ko testa egin dut: Kongresuko 12 bozketa erreal, IA gabe. Nire alderdirik gertukoena: {party} ({pct}%). Zu ere? {url}",
+  "results.shareCopy": "Estekaren kopia egin",
+  "results.shareCopied": "Kopia egin da!",
+  "results.shareDownload": "Irudia deskargatu",
+  "results.shareImageAlt": "aquienenvoto.info-ko emaitzen irudia",
   "results.warnTitle": "Garrantzitsua",
   "results.warn":
     "XV legegintzaldiko bozketetan oinarritako test orientatiboa (datuak 2026/09/30ra arte, gehi 2026/10/02ko bozketa). 29-Neko hauteskunde programa ofizialak oraindik argitaratu gabe daude: kontsultatu iturri ofizialak eta programa osoak erabaki aurretik.",
@@ -489,6 +520,7 @@ const eu: Dict = {
   "admin.completion": "Betea",
 
   "footer.contact": "Kontaktua",
+  "footer.embed": "Txertatu testa",
   "contact.title": "Akats bat aurkitu duzu edo hobekuntza bat duzu?",
   "contact.lead": "Idatzi iezadazu eta berrikusiko dut: datuen, alderdien, galderen zuzenketak edo iradokizunak.",
   "contact.name": "Zure izena",
@@ -501,11 +533,20 @@ const eu: Dict = {
   "contact.close": "Itxi",
 };
 
-const dictionaries: Record<Language, Dict> = { es, ca, gl, eu };
+export const dictionaries: Record<Language, Dict> = { es, ca, gl, eu };
 
 const STORAGE_KEY = "aquienvoto_lang";
 
 function detectLanguage(): Language {
+  // El paràmetre ?lang= de la URL té prioritat (compartits i hreflang)
+  try {
+    const param = new URLSearchParams(window.location.search).get("lang");
+    if (param === "es" || param === "ca" || param === "gl" || param === "eu") {
+      return param;
+    }
+  } catch {
+    /* URL no disponible */
+  }
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "es" || stored === "ca" || stored === "gl" || stored === "eu") {
@@ -535,6 +576,24 @@ const I18nContext = createContext<I18nValue | null>(null);
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(() => detectLanguage());
 
+  // Quan l'usuari canvia d'idioma, es reflecteix a la URL perquè els
+  // enllaços compartits i els buscadors el respecten (?lang=ca/gl/eu)
+  const setLang = useCallback((next: Language) => {
+    setLangState(next);
+    try {
+      const url = new URL(window.location.href);
+      if (next === "es") url.searchParams.delete("lang");
+      else url.searchParams.set("lang", next);
+      window.history.replaceState(
+        {},
+        "",
+        url.pathname + url.search + url.hash
+      );
+    } catch {
+      /* history no disponible */
+    }
+  }, []);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, lang);
@@ -548,7 +607,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const dict = dictionaries[lang];
     return {
       lang,
-      setLang: setLangState,
+      setLang,
       t: (key, vars) => {
         let text: string = dict[key] ?? String(key);
         if (vars) {
@@ -560,7 +619,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       },
       loc: (v) => (v ? v[lang] : ""),
     };
-  }, [lang]);
+  }, [lang, setLang]);
 
   return createElement(I18nContext.Provider, { value }, children);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail } from "lucide-react";
+import { Mail, Code2 } from "lucide-react";
 import { useI18n } from "../i18n";
 import Contact from "./Contact";
 
@@ -15,6 +15,13 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} aQuiénVoto.info
           </p>
           <div className="flex items-center gap-5 text-xs text-gray-500">
+            <a
+              href="/embed.html"
+              className="inline-flex items-center gap-1.5 font-medium text-gray-600 transition-colors hover:text-blue-600"
+            >
+              <Code2 className="h-3.5 w-3.5" />
+              {t("footer.embed")}
+            </a>
             <button
               onClick={() => setContactOpen(true)}
               className="inline-flex items-center gap-1.5 font-medium text-gray-600 transition-colors hover:text-blue-600"

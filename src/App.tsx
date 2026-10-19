@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Test from "./components/Test";
@@ -35,6 +35,15 @@ function App() {
   const { track } = useAnalytics();
   const { saveResponse } = useResponseStorage();
   const { lang } = useI18n();
+
+  // Mode embed (?embed=1): sense capçalera ni peu, per a iframes d'altres webs
+  const isEmbed = useMemo(() => {
+    try {
+      return new URLSearchParams(window.location.search).get("embed") === "1";
+    } catch {
+      return false;
+    }
+  }, []);
 
   const handleNavigate = (view: "home" | "test" | "results") => {
     if (view === "results" && appState.userAnswers.length === 0) {
@@ -132,8 +141,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <Header currentView={appState.currentView} onNavigate={handleNavigate} />
+    <div className={`min-h-screen bg-gray-50 ${isEmbed ? "" : "pt-16"}`}>
+      {!isEmbed && (
+        <Header currentView={appState.currentView} onNavigate={handleNavigate} />
+      )}
 
       {appState.currentView === "home" && (
         <Home onStartTest={handleStartTest} />
@@ -157,9 +168,9 @@ function App() {
         )}
 
       {/* Component d'estadístiques (només visible amb ?admin=true) */}
-      <AdminStats />
+      {!isEmbed && <AdminStats />}
 
-      <Footer />
+      {!isEmbed && <Footer />}
     </div>
   );
 }

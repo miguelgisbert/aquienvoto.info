@@ -11,6 +11,7 @@ import { UserAnswer, PartyMatch, Stance } from "../types";
 import { questions } from "../data/questions";
 import { parties, partyById } from "../data/parties";
 import IntentionBlock from "./IntentionBlock";
+import ShareCard from "./ShareCard";
 import { useI18n } from "../i18n";
 
 interface ResultsProps {
@@ -478,6 +479,9 @@ const Results: React.FC<ResultsProps> = ({
             {t("results.restart")}
           </button>
         </div>
+
+        {/* Compartir */}
+        <ShareCard matches={matches} />
 
         {/* Disclaimer */}
         <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">

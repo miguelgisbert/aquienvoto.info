@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, AtSign, Copy, Check, Download } from "lucide-react";
+import {
+  MessageCircle,
+  Send,
+  AtSign,
+  Copy,
+  Check,
+  Download,
+  Facebook,
+  Instagram,
+} from "lucide-react";
 import { useI18n } from "../i18n";
 import { partyById } from "../data/parties";
 import { useAnalytics } from "../hooks/useAnalytics";
@@ -102,7 +111,7 @@ function drawCard(
   ctx.fillText("aquienenvoto.info", 72, H - 90);
   ctx.fillStyle = "#6b7280";
   ctx.font = `400 28px ${FONT}`;
-  ctx.fillText("12 votaciones reales del Congreso · Cero IA", 72, H - 44);
+  ctx.fillText("12 votaciones reales del Congreso · Anónimo", 72, H - 44);
 }
 
 const ShareCard: React.FC<ShareCardProps> = ({ matches }) => {
@@ -110,6 +119,7 @@ const ShareCard: React.FC<ShareCardProps> = ({ matches }) => {
   const { track } = useAnalytics();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState(false);
+  const [igHint, setIgHint] = useState(false);
 
   const top = matches.slice(0, 3);
   const topMatch = matches[0];
@@ -152,6 +162,36 @@ const ShareCard: React.FC<ShareCardProps> = ({ matches }) => {
     a.href = canvas.toDataURL("image/png");
     a.download = "aquienvoto-resultats.png";
     a.click();
+  };
+
+  // Instagram no té URL de compartició web: provem el share natiu amb la
+  // imatge (mòbil) i, si no, descarreguem la targeta i mostrem un avís.
+  const shareInstagram = async () => {
+    onClick("instagram");
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    try {
+      const blob = await new Promise<Blob | null>((res) =>
+        canvas.toBlob(res, "image/png")
+      );
+      if (blob && typeof navigator !== "undefined" && navigator.canShare) {
+        const file = new File([blob], "aquienvoto-resultats.png", {
+          type: "image/png",
+        });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text: shareText });
+          return;
+        }
+      }
+    } catch {
+      /* cancel·lat o sense suport: fallback a descàrrega */
+    }
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "aquienvoto-resultats.png";
+    a.click();
+    setIgHint(true);
+    window.setTimeout(() => setIgHint(false), 6000);
   };
 
   if (top.length === 0) return null;

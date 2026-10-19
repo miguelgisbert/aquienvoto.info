@@ -148,7 +148,7 @@ function page(opts: {
     <a class="brand" href="${homeHref(lang)}">aQuiénVoto.info</a>
 ${body}
     <a class="cta" href="${homeHref(lang)}">${CTA_LABELS[lang]}</a>
-    <p class="foot"><a href="${homeHref(lang)}">aQuiénVoto.info</a> — 12 votaciones reales del Congreso. Cero IA.</p>
+    <p class="foot"><a href="${homeHref(lang)}">aQuiénVoto.info</a> — 12 votaciones reales del Congreso. Anónimo: no recogemos datos personales.</p>
     <p class="foot">${esc(self)}</p>
   </div>
 </body>

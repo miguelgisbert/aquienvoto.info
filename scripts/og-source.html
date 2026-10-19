@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<!--
+  Source de public/og.png (1200×630).
+  Regenerar: google-chrome --headless=new --disable-gpu --screenshot=... o via CDP.
+  Partits i colors sincronitzats amb src/data/parties.ts (11 entrades, ordre id).
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 55%, #f0fdf4 100%);
+  }
+  .bar { position: absolute; top: 0; left: 0; right: 0; height: 14px;
+    background: linear-gradient(90deg,
+      #E4002B 0 14.28%, #1E5BC6 0 28.56%, #E0457B 0 42.84%,
+      #F57C00 0 57.12%, #7CB342 0 71.4%, #7B1FA2 0 85.68%, #E6B800 85.68% 100%); }
+  .wrap { padding: 48px 64px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+  .brand { font-size: 27px; font-weight: 700; color: #2563eb; letter-spacing: -0.5px; }
+  h1 { font-size: 54px; font-weight: 800; color: #111827; line-height: 1.08; max-width: 900px; margin-top: 14px; }
+  .sub { font-size: 23px; color: #4b5563; margin-top: 12px; }
+  .trust { font-size: 19px; color: #6b7280; margin-top: 10px; max-width: 980px; line-height: 1.35; }
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; max-width: 1072px; }
+  .chip { display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid #e5e7eb;
+    border-radius: 999px; padding: 7px 13px; font-size: 17px; font-weight: 700; color: #111827; }
+  .dot { width: 12px; height: 12px; border-radius: 999px; }
+  .foot { display: flex; align-items: center; justify-content: space-between; }
+  .foot .url { font-size: 27px; font-weight: 800; color: #2563eb; }
+  .foot .note { font-size: 19px; color: #6b7280; }
+</style>
+</head>
+<body>
+  <div class="bar"></div>
+  <div class="wrap">
+    <div>
+      <div class="brand">aQuiénVoto.info</div>
+      <h1>¿Con qué partido coincides según votaciones reales?</h1>
+      <div class="sub">12 preguntas basadas en votaciones reales del Congreso de los Diputados.</div>
+      <div class="trust">Anónimo: no recogemos datos personales, no se usa para nada más y no pertenece a ningún partido ni asociación.</div>
+      <div class="chips">
+        <div class="chip"><span class="dot" style="background:#E4002B"></span>PSOE</div>
+        <div class="chip"><span class="dot" style="background:#1E5BC6"></span>PP</div>
+        <div class="chip"><span class="dot" style="background:#7CB342"></span>VOX</div>
+        <div class="chip"><span class="dot" style="background:#E0457B"></span>Frente Amplio</div>
+        <div class="chip"><span class="dot" style="background:#7B1FA2"></span>Podemos</div>
+        <div class="chip"><span class="dot" style="background:#F57C00"></span>Compromís</div>
+        <div class="chip"><span class="dot" style="background:#E6B800"></span>ERC</div>
+        <div class="chip"><span class="dot" style="background:#1BA0C4"></span>Junts</div>
+        <div class="chip"><span class="dot" style="background:#007A33"></span>PNV</div>
+        <div class="chip"><span class="dot" style="background:#455A64"></span>Izq. Soberanista</div>
+        <div class="chip"><span class="dot" style="background:#3949AB"></span>CC</div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="url">aquienvoto.info</div>
+      <div class="note">es · ca · gl · eu</div>
+    </div>
+  </div>
+</body>
+</html>

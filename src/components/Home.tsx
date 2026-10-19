@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, CheckCircle, ExternalLink, FileText } from "lucide-react";
+import { ArrowRight, CheckCircle, ExternalLink, FileText, ShieldCheck } from "lucide-react";
 import { useAnalytics } from "../hooks/useAnalytics";
 import { useI18n } from "../i18n";
 
@@ -44,6 +44,10 @@ const Home: React.FC<HomeProps> = ({ onStartTest }) => {
             {t("home.cta")}
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
+          <p className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500 max-w-2xl mx-auto">
+            <ShieldCheck className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
+            {t("home.trust")}
+          </p>
         </div>
 
         {/* Features */}

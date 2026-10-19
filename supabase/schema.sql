@@ -8,7 +8,12 @@ create table if not exists public.responses (
   completed_at timestamptz,
   duration_ms integer,
   intent_before text,
-  intent_after text
+  intent_after text,
+  country text,
+  region text,
+  city text,
+  tz text,
+  referrer text
 );
 
 create index if not exists responses_created_at_idx on public.responses (created_at desc);
@@ -35,5 +40,10 @@ create policy "authenticated_select_responses"
 --     on public.responses for select to authenticated using (true);
 --   alter table public.responses
 --     add column if not exists intent_before text,
---     add column if not exists intent_after text;
+--     add column if not exists intent_after text,
+--     add column if not exists country text,
+--     add column if not exists region text,
+--     add column if not exists city text,
+--     add column if not exists tz text,
+--     add column if not exists referrer text;
 -- ---------------------------------------------------------------------------

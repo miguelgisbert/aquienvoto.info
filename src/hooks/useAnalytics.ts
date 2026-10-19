@@ -105,16 +105,27 @@ export const updateStoredIntents = (
 };
 
 // Hook per emmagatzemar respostes: Supabase + còpia local
+import { getGeoInfo, entryReferrer } from "../lib/geo";
+
 export const useResponseStorage = () => {
   const saveResponse = async (
     responses: StoredAnswer[],
     userMetadata?: Record<string, unknown>
   ): Promise<SaveResult> => {
     try {
+      // Ubicació aproximada (IP) + referent, sense cap permís de l'usuari
+      const geo = await getGeoInfo();
+      const referrer = entryReferrer();
+
       const responseData: StoredResponse = {
         responses,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
+        country: geo.country,
+        region: geo.region,
+        city: geo.city,
+        tz: geo.tz,
+        referrer,
         ...userMetadata,
       };
 
@@ -141,6 +152,11 @@ export const useResponseStorage = () => {
             (userMetadata?.intent_before as string | null | undefined) ?? null,
           intent_after:
             (userMetadata?.intent_after as string | null | undefined) ?? null,
+          country: geo.country,
+          region: geo.region,
+          city: geo.city,
+          tz: geo.tz,
+          referrer,
         });
         remote = id !== null;
       }

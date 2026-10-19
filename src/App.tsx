@@ -13,6 +13,7 @@ import {
   updateStoredIntents,
 } from "./hooks/useAnalytics";
 import { updateResponseIntents } from "./lib/supabase";
+import { prefetchGeo } from "./lib/geo";
 import { useI18n } from "./i18n";
 
 interface SavedResponse {
@@ -43,6 +44,9 @@ function App() {
   };
 
   const handleStartTest = () => {
+    // Geolocalització aproximada: es demana en iniciar el test perquè, quan
+    // es desen les respostes, ja estiga en caché i no endarrerege l'inserció
+    prefetchGeo();
     setAppState((prev) => ({
       ...prev,
       currentView: "test",

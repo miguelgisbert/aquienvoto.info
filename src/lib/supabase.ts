@@ -10,6 +10,11 @@ export interface ResponseRow {
   duration_ms?: number | null;
   intent_before?: string | null;
   intent_after?: string | null;
+  country?: string | null;
+  region?: string | null;
+  city?: string | null;
+  tz?: string | null;
+  referrer?: string | null;
 }
 
 export interface AuthSession {
@@ -47,18 +52,41 @@ export async function insertResponse(row: ResponseRow): Promise<string | null> {
     console.info("[supabase] inserció desactivada: no ets a la URL de producció");
     return null;
   }
-  try {
-    const res = await fetch(`${url}/rest/v1/responses`, {
+  const post = (payload: ResponseRow) =>
+    fetch(`${url}/rest/v1/responses`, {
       method: "POST",
       headers: { ...headers(), Prefer: "return=representation" },
-      body: JSON.stringify(row),
+      body: JSON.stringify(payload),
     });
+  try {
+    let res = await post(row);
+    if (!res.ok && res.status === 400) {
+      const detail = await res.text().catch(() => "");
+      if (detail.includes("does not exist")) {
+        // Migració de columnes noves (geo) pendent: reenvia sense elles
+        // per no perdre la resposta.
+        console.warn(
+          "[supabase] columnes noves absents; reinserció sense dades geo:",
+          detail.slice(0, 200)
+        );
+        const base: ResponseRow = {
+          lang: row.lang,
+          answers: row.answers,
+          user_agent: row.user_agent ?? null,
+          completed_at: row.completed_at ?? null,
+          duration_ms: row.duration_ms ?? null,
+          intent_before: row.intent_before ?? null,
+          intent_after: row.intent_after ?? null,
+        };
+        res = await post(base);
+      } else {
+        console.error(`[supabase] inserció rebutjada (${res.status}):`, detail.slice(0, 300));
+        return null;
+      }
+    }
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
-      console.error(
-        `[supabase] inserció rebutjada (${res.status}):`,
-        detail.slice(0, 300)
-      );
+      console.error(`[supabase] inserció rebutjada (${res.status}):`, detail.slice(0, 300));
       return null;
     }
     const rows = (await res.json()) as ResponseRow[];

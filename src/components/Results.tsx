@@ -350,6 +350,9 @@ const Results: React.FC<ResultsProps> = ({
           <IntentionBlock onDone={onIntentionDone} />
         )}
 
+        {/* Compartir: abans del desglose, perquè es veja en acabar el test */}
+        <ShareCard matches={matches} />
+
         {/* Detailed Breakdown */}
         <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-5">
@@ -479,9 +482,6 @@ const Results: React.FC<ResultsProps> = ({
             {t("results.restart")}
           </button>
         </div>
-
-        {/* Compartir */}
-        <ShareCard matches={matches} />
 
         {/* Disclaimer */}
         <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">

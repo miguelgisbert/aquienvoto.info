@@ -45,11 +45,16 @@ function App() {
     }
   }, []);
 
+  // En canviar de vista es va a dalt: en acabar el test la vista de
+  // resultats ha de mostrarse des de l'inici, no on estava l'scroll
+  const scrollToTop = () => window.scrollTo({ top: 0 });
+
   const handleNavigate = (view: "home" | "test" | "results") => {
     if (view === "results" && appState.userAnswers.length === 0) {
       return; // Don't allow navigation to results without answers
     }
     setAppState((prev) => ({ ...prev, currentView: view }));
+    scrollToTop();
   };
 
   const handleStartTest = () => {
@@ -65,6 +70,7 @@ function App() {
     }));
     setIntentionOpen(false);
     savePromise.current = null;
+    scrollToTop();
   };
 
   // Guardat en dues fases: la fila es desa en acabar el test (sense
@@ -81,6 +87,7 @@ function App() {
       userAnswers: answers,
       showResults: true,
     }));
+    scrollToTop();
 
     savePromise.current = saveResponse(answers, {
       lang,
@@ -138,6 +145,7 @@ function App() {
     setIntentionOpen(false);
     setTestDurationMs(null);
     savePromise.current = null;
+    scrollToTop();
   };
 
   return (

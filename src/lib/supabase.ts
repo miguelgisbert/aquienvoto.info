@@ -62,7 +62,11 @@ export async function insertResponse(row: ResponseRow): Promise<string | null> {
     let res = await post(row);
     if (!res.ok && res.status === 400) {
       const detail = await res.text().catch(() => "");
-      if (detail.includes("does not exist")) {
+      // Columnes noves absents (migració pendent): Postgres diu
+      // "does not exist" (42703) i PostgREST "Could not find ... in the
+      // schema cache" (PGRST204) — reenvia la fila sense elles en qualsevol
+      // dels dos casos per no perdre la resposta.
+      if (/column|does not exist|could not find/i.test(detail)) {
         // Migració de columnes noves (geo) pendent: reenvia sense elles
         // per no perdre la resposta.
         console.warn(

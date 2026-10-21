@@ -117,8 +117,9 @@ function App() {
     }
 
     void (savePromise.current ?? Promise.resolve(null)).then((saved) => {
-      if (!saved) {
-        // La inserció inicial va fallar: es desa sencer amb les intencions
+      if (!saved || !saved.id) {
+        // La inserció inicial va fallar o no té id remot: es desa sencer
+        // amb les intencions per no perdre-les.
         void saveResponse(appState.userAnswers, {
           lang,
           test_completed_at: new Date().toISOString(),

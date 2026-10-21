@@ -46,20 +46,35 @@ function headers(accessToken?: string): Record<string, string> {
   };
 }
 
+// id generat al client: permet usar `Prefer: return=minimal`, perquè
+// `return=representation` fa un RETURNING que Postgres avalua amb les
+// polítiques de SELECT — i l'anon no en té (per privacitat).
+function newId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export async function insertResponse(row: ResponseRow): Promise<string | null> {
   if (!supabaseEnabled) return null;
   if (!isProductionHost()) {
     console.info("[supabase] inserció desactivada: no ets a la URL de producció");
     return null;
   }
+  const id = row.id ?? newId();
   const post = (payload: ResponseRow) =>
     fetch(`${url}/rest/v1/responses`, {
       method: "POST",
-      headers: { ...headers(), Prefer: "return=representation" },
+      headers: { ...headers(), Prefer: "return=minimal" },
       body: JSON.stringify(payload),
     });
   try {
-    let res = await post(row);
+    let res = await post({ ...row, id });
     if (!res.ok && res.status === 400) {
       const detail = await res.text().catch(() => "");
       // Columnes noves absents (migració pendent): Postgres diu
@@ -67,13 +82,12 @@ export async function insertResponse(row: ResponseRow): Promise<string | null> {
       // schema cache" (PGRST204) — reenvia la fila sense elles en qualsevol
       // dels dos casos per no perdre la resposta.
       if (/column|does not exist|could not find/i.test(detail)) {
-        // Migració de columnes noves (geo) pendent: reenvia sense elles
-        // per no perdre la resposta.
         console.warn(
           "[supabase] columnes noves absents; reinserció sense dades geo:",
           detail.slice(0, 200)
         );
         const base: ResponseRow = {
+          id,
           lang: row.lang,
           answers: row.answers,
           user_agent: row.user_agent ?? null,
@@ -93,8 +107,7 @@ export async function insertResponse(row: ResponseRow): Promise<string | null> {
       console.error(`[supabase] inserció rebutjada (${res.status}):`, detail.slice(0, 300));
       return null;
     }
-    const rows = (await res.json()) as ResponseRow[];
-    return rows?.[0]?.id ?? null;
+    return id;
   } catch (error) {
     console.error("Error guardant a Supabase:", error);
     return null;

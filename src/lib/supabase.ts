@@ -124,22 +124,27 @@ export async function updateResponseIntents(
   if (!supabaseEnabled) return false;
   if (!isProductionHost()) return false;
   try {
-    const res = await fetch(
-      `${url}/rest/v1/responses?id=eq.${encodeURIComponent(id)}`,
-      {
-        method: "PATCH",
-        headers: { ...headers(), Prefer: "return=minimal" },
-        body: JSON.stringify({ intent_before: before, intent_after: after }),
-      }
-    );
+    // RPC SECURITY DEFINER: el camí PATCH/RLS de la taula afectava 0 files
+    // malgrat les polítiques correctes; la funció actualitza com a
+    // propietària i torna el nombre de files tocades.
+    const res = await fetch(`${url}/rest/v1/rpc/set_intents`, {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({ p_id: id, p_before: before, p_after: after }),
+    });
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
       console.error(
         `[supabase] actualització d'intencions rebutjada (${res.status}):`,
         detail.slice(0, 300)
       );
+      return false;
     }
-    return res.ok;
+    const touched = await res.json().catch(() => null);
+    if (touched === 0) {
+      console.warn("[supabase] set_intents: cap fila actualitzada", id);
+    }
+    return touched !== 0;
   } catch (error) {
     console.error("Error actualitzant intencions a Supabase:", error);
     return false;
